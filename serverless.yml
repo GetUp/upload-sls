@@ -21,16 +21,17 @@ provider:
           Action:
             - "s3:*"
           Resource: "arn:aws:s3:::upload-sls/*"
-  httpApi:
-    cors: true
+  apiGateway:
+    shouldStartNameWithService: true # can remove this after sls v3
 
 functions:
   url:
     handler: handler.url
     events:
-      - httpApi:
-          path: /upload-url
+      - http:
+          path: /
           method: post
+          cors: true
 
 resources:
   Resources:
