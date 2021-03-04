@@ -1,18 +1,28 @@
-'use strict';
+'use strict'
 
-module.exports.hello = async (event) => {
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner")
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3")
+const client = new S3Client({})
+
+module.exports.url = async ({ body }) => {
+  console.log(body)
+
+  const { project, filename } = JSON.parse(body)
+  const command = new PutObjectCommand({
+    Bucket: 'upload-sls',
+    ACL: 'public-read',
+    Key: `${project || 'no-project'}/${filename}`,
+  })
+  const url = await getSignedUrl(client, command)
+
   return {
     statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
-
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
-};
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+    },
+    body: JSON.stringify({
+      url,
+    }),
+  }
+}
