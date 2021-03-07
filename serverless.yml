@@ -1,5 +1,6 @@
 service: upload-sls
 frameworkVersion: '2'
+useDotenv: true
 
 provider:
   name: aws
@@ -27,6 +28,8 @@ provider:
 functions:
   url:
     handler: handler.url
+    environment:
+      DOMAIN_ALLOWLIST: ${env:DOMAIN_ALLOWLIST}
     events:
       - http:
           path: /

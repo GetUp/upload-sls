@@ -1,0 +1,6 @@
+{
+  "headers": {
+    "origin": "https://nsfuw.netlify.app"
+  },
+  "body": "{ \"campaign\": \"campaign-name\", \"filename\": \"example.png\" }"
+}
