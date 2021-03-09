@@ -4,8 +4,14 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner")
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3")
 const client = new S3Client({})
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true,
+}
+
 const errorResponse = error => ({
   statusCode: 400,
+  headers,
   body: JSON.stringify({
     error,
   }),
@@ -31,10 +37,7 @@ module.exports.url = async ({ headers: { origin }, body }) => {
 
   return {
     statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true,
-    },
+    headers,
     body: JSON.stringify({
       url,
     }),
